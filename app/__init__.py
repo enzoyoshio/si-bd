@@ -7,8 +7,10 @@ from sqlalchemy.ext.declarative import declarative_base
 app = Flask(__name__)
 api = Api(app, prefix='/api')
 
-@app.route("/")
-def home():
-    return "Hello, si-bd!"
+from app.HelloWorld.views import HelloWorldView
 
-# api.add_resource()
+# @app.route("/")
+# def home():
+#     return "Hello, si-bd!"
+
+api.add_resource(HelloWorldView, '/hello')
