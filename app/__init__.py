@@ -16,7 +16,8 @@ from app.Area.views import AreaView
 #     return "Hello, si-bd!"
 
 api.add_resource(HelloWorldView, '/hello')
-api.add_resource(AreaView, '/areas')
+# api.add_resource(AreaView, '/areas')
+api.add_resource(AreaView, '/areas/<area_id>')
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
