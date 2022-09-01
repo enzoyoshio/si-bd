@@ -79,29 +79,6 @@ class AreaView(Resource):
         
         return json_response(data=data, message="area cadastrada com sucesso!", status=200)
 
-    def post(self):
-        data = request.get_json()
-
-        model = AreaModel(
-            nome=data['nome'], 
-            descricao=data['descricao'], 
-            lotacao_max=data['lotacao_max'], 
-            modalidade=data['modalidade'],
-            horario_seg=data['horario_seg'],
-            horario_ter=data['horario_ter'],
-            horario_qua=data['horario_qua'],
-            horario_qui=data['horario_qui'],
-            horario_sex=data['horario_sex'],
-            horario_sab=data['horario_sab'],
-            horario_dom=data['horario_dom'],
-            latitude=data['latitude'],
-            longitude=data['longitude']
-        )
-
-        db_session.add(model)
-        db_session.commit()
-        
-        return json_response(message="area cadastrada com sucesso!", status=200)
 
     def put(self, area_id):
         data = request.get_json()
