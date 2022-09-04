@@ -111,7 +111,11 @@ class AreaViewId(Resource):
         # data = AreaModel.query.all()
         # data_json = query2json(data)
         # else:
+        print(">>>>>>>>>>>")
         data = AreaModel.query.filter(AreaModel.id == area_id).first()
+        print(data)
+        if(data == None): 
+            return json_response(message="id nao encontrado", status=404) 
         data_json = query2json([data])
         return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
 
