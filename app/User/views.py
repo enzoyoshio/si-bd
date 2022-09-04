@@ -6,13 +6,12 @@ from flask_restful import reqparse
 
 from app.core.database import db_session
 from app.Area.models import AreaModel
-from app.Area.schemas import AreaSchema
 
 from sqlalchemy import update, delete
 
 class UserView(Resource):
     def __init__(self):
-        self.teste = ''
+        pass
 
 
     def query2json(self, q):
@@ -40,3 +39,23 @@ class UserView(Resource):
             }
             data.append(d)
         return data
+    
+
+class UserViewId(Resource):
+    def __init__(self):
+        pass
+
+
+class SigninView(Resource):
+    def __init__(self):
+        pass
+
+
+class SignupView(Resource):
+    def __init__(self):
+        pass
+
+
+class SignoutView(Resource):
+    def __init__(self):
+        pass

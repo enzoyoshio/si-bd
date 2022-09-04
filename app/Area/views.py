@@ -111,9 +111,7 @@ class AreaViewId(Resource):
         # data = AreaModel.query.all()
         # data_json = query2json(data)
         # else:
-        print(">>>>>>>>>>>")
         data = AreaModel.query.filter(AreaModel.id == area_id).first()
-        print(data)
         if(data == None): 
             return json_response(message="id nao encontrado", status=404) 
         data_json = query2json([data])
@@ -133,8 +131,8 @@ class AreaViewId(Resource):
     
     def delete(self, area_id):
 
-        delete = delete(AreaModel).where(AreaModel.id == area_id)
-        db_session.execute(delete)
+        dele = delete(AreaModel).where(AreaModel.id == area_id)
+        db_session.execute(dele)
         db_session.commit()
         
         return json_response(message="area deletada com succeso", status=200)
