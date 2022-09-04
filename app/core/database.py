@@ -21,6 +21,6 @@ def init_db():
 
     import app.Area.models
     # import app.User.models
-    import app.Login.models
+    import app.User.models
     Base.metadata.create_all(bind=engine)
 

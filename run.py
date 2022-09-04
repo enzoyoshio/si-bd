@@ -1,10 +1,8 @@
-from contextlib import redirect_stderr
 from app import app
 from app.core.database import init_db
-from app.core.database import db_session, engine 
-from app.Area.models import AreaModel
-from app.Login.models import LoginModel
-from flask import (session, request, render_template, redirect, url_for, g)
+from app.core.database import db_session
+from app.User.models import UserModel
+from app.core.database import engine
 
 # from config import config
 
@@ -13,7 +11,7 @@ if __name__ == '__main__':
     
     # run this if you need to change columns
     # AreaModel.__table__.drop(engine)
-    # LoginModel.__table__.drop(engine)
+    #UserModel.__table__.drop(engine)
     init_db()
     app.run(debug=True)
 
