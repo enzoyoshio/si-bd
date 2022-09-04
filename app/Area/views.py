@@ -6,50 +6,57 @@ from flask_restful import reqparse
 
 from app.core.database import db_session
 from app.Area.models import AreaModel
-from app.Area.schemas import AreaSchema
+# from app.Area.schemas import AreaSchema
 
 from sqlalchemy import update, delete
+
+def query2json(q):
+    data = []
+    for el in q:
+        d = {}
+        d["id"] = el.id 
+        d["nome"]=el.nome 
+        d["descricao"]=el.descricao 
+        d["lotacao_max"]=el.lotacao_max 
+        d["horario"] = {
+            "seg_ini": el.horario_seg_ini,
+            "seg_fim": el.horario_seg_fim,
+            "ter_ini": el.horario_ter_ini,
+            "ter_fim": el.horario_ter_fim,
+            "qua_ini": el.horario_qua_ini,
+            "qua_fim": el.horario_qua_fim,
+            "qui_ini": el.horario_qui_ini,
+            "qui_fim": el.horario_qui_fim,
+            "sex_ini": el.horario_sex_ini,
+            "sex_fim": el.horario_sex_fim,
+            "sab_ini": el.horario_sab_ini,
+            "sab_fim": el.horario_sab_fim,
+            "dom_ini": el.horario_dom_ini,
+            "dom_fim": el.horario_dom_fim,
+        }
+        d["modalidade"]=el.modalidade
+        d["geojson"] = {
+            "type": "Feature",
+            "Geometry": {
+                "type": "Point",
+                "coordinates": [str(el.latitude), str(el.longitude)]
+            }
+        }
+        data.append(d)
+    return data
 
 class AreaView(Resource):
     
     def __init__(self):
-        self.teste = ''
+        pass
 
-    def query2json(self, q):
-        data = []
-        for el in q:
-            d = {}
-            d["id"] = el.id 
-            d["nome"]=el.nome 
-            d["descricao"]=el.descricao 
-            d["lotacao_max"]=el.lotacao_max 
-            d["modalidade"]=el.modalidade
-            d["horario_seg"]=el.horario_seg
-            d["horario_ter"]=el.horario_ter
-            d["horario_qua"]=el.horario_qua
-            d["horario_qui"]=el.horario_qui
-            d["horario_sex"]=el.horario_sex
-            d["horario_sab"]=el.horario_sab
-            d["horario_dom"]=el.horario_dom
-            d["geojson"] = {
-                "type": "Feature",
-                "Geometry": {
-                    "type": "Point",
-                    "coordinates": [str(el.latitude), str(el.longitude)]
-                }
-            }
-            data.append(d)
-        return data
-
-    def get(self, area_id):
+    def get(self):
         data = []
         data_json = []
-        # if area_id == 0:
+        
         data = AreaModel.query.all()
-        data_json = self.query2json(data)
-        # else:
-        #     data = AreaModel.query.filter(AreaModel.id == area_id).first()
-        #     data_json = self.query2json([data])
+        data_json = query2json(data)
+        
         return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
 
     def post(self):
@@ -60,15 +67,22 @@ class AreaView(Resource):
             descricao=data['descricao'], 
             lotacao_max=data['lotacao_max'], 
             modalidade=data['modalidade'],
-            horario_seg=data['horario_seg'],
-            horario_ter=data['horario_ter'],
-            horario_qua=data['horario_qua'],
-            horario_qui=data['horario_qui'],
-            horario_sex=data['horario_sex'],
-            horario_sab=data['horario_sab'],
-            horario_dom=data['horario_dom'],
-            latitude=data['latitude'],
-            longitude=data['longitude']
+            horario_seg_ini=data['horario']['seg_ini'],
+            horario_seg_fim=data['horario']['seg_fim'],
+            horario_ter_ini=data['horario']['ter_ini'],
+            horario_ter_fim=data['horario']['ter_fim'],
+            horario_qua_ini=data['horario']['qua_ini'],
+            horario_qua_fim=data['horario']['qua_fim'],
+            horario_qui_ini=data['horario']['qui_ini'],
+            horario_qui_fim=data['horario']['qui_fim'],
+            horario_sex_ini=data['horario']['sex_ini'],
+            horario_sex_fim=data['horario']['sex_fim'],
+            horario_sab_ini=data['horario']['sab_ini'],
+            horario_sab_fim=data['horario']['sab_fim'],
+            horario_dom_ini=data['horario']['dom_ini'],
+            horario_dom_fim=data['horario']['dom_fim'],
+            latitude=data['geojson']['Geometry']['coordinates'][0],
+            longitude=data['geojson']['Geometry']['coordinates'][1]
         )
 
         print(model)
@@ -77,8 +91,32 @@ class AreaView(Resource):
         db_session.add(model)
         db_session.commit()
         
-        return json_response(data=data, message="area cadastrada com sucesso!", status=200)
+        return json_response(message="area cadastrada com sucesso!", status=200)
 
+        def put(self):
+            return json_response(message="metodo nao permitido.", status=405)
+
+        def delete(self):
+            return json_response(message="metodo nao permitido.", status=405)
+
+class AreaViewId(Resource):
+
+    def __init__(self):
+        pass
+
+    def get(self, area_id):
+        data = []
+        data_json = []
+        # if area_id == 0:
+        # data = AreaModel.query.all()
+        # data_json = query2json(data)
+        # else:
+        data = AreaModel.query.filter(AreaModel.id == area_id).first()
+        data_json = query2json([data])
+        return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
+
+    def post(self, area_id):
+        return json_response(message="metodo nao permitido.", status=405)
 
     def put(self, area_id):
         data = request.get_json()

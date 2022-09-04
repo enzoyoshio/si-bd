@@ -9,15 +9,15 @@ app = Flask(__name__)
 api = Api(app, prefix='/api')
 
 from app.HelloWorld.views import HelloWorldView
-from app.Area.views import AreaView
+from app.Area.views import AreaView, AreaViewId
 
 # @app.route("/")
 # def home():
 #     return "Hello, si-bd!"
 
 api.add_resource(HelloWorldView, '/hello')
-# api.add_resource(AreaView, '/areas')
-api.add_resource(AreaView, '/areas/<area_id>')
+api.add_resource(AreaView, '/areas')
+api.add_resource(AreaViewId, '/areas/<area_id>')
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
