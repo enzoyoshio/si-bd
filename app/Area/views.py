@@ -8,7 +8,7 @@ from app.core.database import db_session
 from app.Area.models import AreaModel
 # from app.Area.schemas import AreaSchema
 
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from sqlalchemy import update, delete
 
@@ -17,6 +17,7 @@ def query2json(q):
     for el in q:
         d = {}
         d["id"] = el.id 
+        d["user_id"] = el.user_id
         d["nome"]=el.nome 
         d["descricao"]=el.descricao 
         d["lotacao_max"]=el.lotacao_max 
@@ -52,19 +53,23 @@ class AreaView(Resource):
     def __init__(self):
         pass
 
+    @login_required
     def get(self):
         curr_user = current_user
+
         print(">>>>>>>>>>>>>>>>")
-        print(curr_user)
+        print(curr_user.id)
         data = []
         data_json = []
         
-        data = AreaModel.query.all()
+        data = AreaModel.query.filter(AreaModel.user_id == curr_user.id).all()
         data_json = query2json(data)
         
         return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
 
+    @login_required
     def post(self):
+        curr_user = current_user
         data = request.get_json()
 
         model = AreaModel(
@@ -87,11 +92,12 @@ class AreaView(Resource):
             horario_dom_ini=data['horario']['dom_ini'],
             horario_dom_fim=data['horario']['dom_fim'],
             latitude=data['geojson']['Geometry']['coordinates'][0],
-            longitude=data['geojson']['Geometry']['coordinates'][1]
+            longitude=data['geojson']['Geometry']['coordinates'][1],
+            user_id=curr_user.id
         )
 
         print(model)
-        print(model.latitude, type(model.latitude))
+        # print(model.latitude, type(model.latitude))
 
         db_session.add(model)
         db_session.commit()
@@ -141,3 +147,34 @@ class AreaViewId(Resource):
         db_session.commit()
         
         return json_response(message="area deletada com succeso", status=200)
+
+# { 
+#     "user_id": 1,
+#     "nome": "area teste", 
+#     "descricao": "desc teste", 
+#     "lotacao_max": 100, 
+#     "horario": {
+#         "seg_ini": "12:00",
+#         "seg_fim": "12:00",
+#         "ter_ini": "12:00",
+#         "ter_fim": "12:00",
+#         "qua_ini": "12:00",
+#         "qua_fim": "12:00",
+#         "qui_ini": "12:00",
+#         "qui_fim": "12:00",
+#         "sex_ini": "12:00",
+#         "sex_fim": "12:00",
+#         "sab_ini": "12:00",
+#         "sab_fim": "12:00",
+#         "dom_ini": "12:00",
+#         "dom_fim": "12:00"
+#     },
+#     "modalidade": "horta",
+#     "geojson": {
+#         "type": "Feature",
+#         "Geometry": {
+#             "type": "Point",
+#             "coordinates": [10.92175, 97.328475]
+#         }
+#     }
+# }

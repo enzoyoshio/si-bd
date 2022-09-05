@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric
+from sqlalchemy import Column, Integer, String, Numeric, ForeignKey
 from app.core.database import Base
 
 class AreaModel(Base):
@@ -24,6 +24,8 @@ class AreaModel(Base):
     horario_sab_fim = Column(String(40))
     horario_dom_ini = Column(String(40))
     horario_dom_fim = Column(String(40))
+    user_id = Column(Integer, ForeignKey("Users.id"), nullable=False)
+
 
     def __init__(
                 self, 
@@ -46,7 +48,8 @@ class AreaModel(Base):
                 horario_sab_ini=None,
                 horario_sab_fim=None,
                 horario_dom_ini=None,
-                horario_dom_fim=None
+                horario_dom_fim=None,
+                user_id=None
                 ):
         self.nome = nome
         self.descricao = descricao
@@ -68,6 +71,7 @@ class AreaModel(Base):
         self.horario_dom_fim=horario_dom_fim
         self.latitude=latitude
         self.longitude=longitude
+        self.user_id=user_id
     
     def __repr__(self):
         return f"<Area {self.nome}!\nDescrição:{self.descricao}\n" + f"Capacidade máxima: {self.lotacao_max}\nModalidade: {self.modalidade}\n" + f"lati: {self.latitude}\nLon: {self.longitude}\n"

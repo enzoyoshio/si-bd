@@ -2,6 +2,7 @@ from app import app
 from app.core.database import init_db
 from app.core.database import db_session
 from app.User.models import UserModel
+from app.Area.models import AreaModel
 from app.core.database import engine
 
 # from config import config

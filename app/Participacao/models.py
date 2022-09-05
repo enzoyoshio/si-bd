@@ -8,7 +8,7 @@ class ParticipacaoModel(Base):
     __tablename__ = 'participacoes'
     id = Column(Integer, primary_key=True) # do I need this?
     area_id = Column(Integer, ForeignKey("areas.id"), primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    user_id = Column(Integer, ForeignKey("Users.id"), primary_key=True)
 
     def __init__(
                 self,
