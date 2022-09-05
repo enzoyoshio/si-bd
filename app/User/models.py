@@ -9,7 +9,7 @@ class UserModel(Base, UserMixin):
     id = Column(Integer, primary_key=True)
     nome = Column(String(50))
     password = Column(String(256))
-    email = Column(String(256))
+    email = Column(String(256), unique=True)
 
     def __init__(self, password= None, nome = None, email = None):
         self.password = password

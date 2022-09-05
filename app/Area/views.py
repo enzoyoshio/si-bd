@@ -8,6 +8,8 @@ from app.core.database import db_session
 from app.Area.models import AreaModel
 # from app.Area.schemas import AreaSchema
 
+from flask_login import current_user
+
 from sqlalchemy import update, delete
 
 def query2json(q):
@@ -51,6 +53,9 @@ class AreaView(Resource):
         pass
 
     def get(self):
+        curr_user = current_user
+        print(">>>>>>>>>>>>>>>>")
+        print(curr_user)
         data = []
         data_json = []
         

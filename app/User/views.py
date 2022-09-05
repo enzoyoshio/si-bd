@@ -3,7 +3,7 @@ from flask import request, jsonify
 
 from app.core.util.response import json_response
 from flask_restful import reqparse
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_manager
 from app.core.database import db_session
 
 
@@ -43,6 +43,14 @@ class UserViewId(Resource):
     def __init__(self):
         pass
 
+    def delete(self, user_id):
+
+        dele = delete(UserModel).where(UserModel.id == user_id)
+        db_session.execute(dele)
+        db_session.commit()
+        
+        return json_response(message="Usuario deletado com succeso", status=200)
+
 
 class SigninView(Resource):
     def __init__(self):
@@ -54,7 +62,7 @@ class SigninView(Resource):
         if user is None:
             return json_response(message="O usuário não existe", status=405)
         if user.password == data['password']:
-            login_user(user)
+            login_user(user, remember=True)
             return json_response(message="Login realizado com sucesso", status=200)
         return json_response(message="Senha incorreta", status=405)
 
@@ -68,6 +76,7 @@ class SignupView(Resource):
         if data['password'] != data['password_confirm']:
             return json_response(message="A senhas não são iguais!", status=405)
 
+
         model = UserModel(
             nome = data['nome'],
             password = data['password'],
@@ -76,13 +85,13 @@ class SignupView(Resource):
         print(">>>>>>>>>>>>>>>>>>")
         print(model)
 
-        db_session.add(model)
-        db_session.commit()
-        
+        try:
+            db_session.add(model)
+            db_session.commit()
+        except:
+            return json_response(message="email ja cadastrado", status=405)
+
         return json_response(message="Usuário cadastrado com sucesso com sucesso!", status=200)
-
-
-
 
 class SignoutView(Resource):
     def __init__(self):

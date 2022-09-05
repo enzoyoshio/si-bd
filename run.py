@@ -11,7 +11,7 @@ if __name__ == '__main__':
     
     # run this if you need to change columns
     # AreaModel.__table__.drop(engine)
-    #UserModel.__table__.drop(engine)
+    # UserModel.__table__.drop(engine)
     init_db()
     app.run(debug=True)
 
