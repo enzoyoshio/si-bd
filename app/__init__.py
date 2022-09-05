@@ -14,7 +14,8 @@ login_manager = LoginManager(app)
 
 from app.HelloWorld.views import HelloWorldView
 from app.Area.views import AreaView, AreaViewId
-from app.User.views import SignupView, UserView, SigninView, SignoutView
+from app.User.views import SignupView, UserView, SigninView, SignoutView, UserViewId
+from app.Participacao.views import ParticipacaoView
 
 from app.User.models import UserModel
 
@@ -27,7 +28,9 @@ api.add_resource(SigninView, '/auth/signin')
 api.add_resource(SignupView, '/auth/signup')
 api.add_resource(SignoutView, '/auth/signout')
 api.add_resource(UserView, '/users')
-# api.add_resource(UserViewId, '/users/<user_id>')
+api.add_resource(UserViewId, '/users/<user_id>')
+
+api.add_resource(ParticipacaoView, '/participacoes')
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
