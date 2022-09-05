@@ -5,9 +5,11 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import LoginManager
 from app.core.database import db_session 
+from flask_cors import CORS
 
 app = Flask(__name__)
 api = Api(app, prefix='/api')
+CORS(app, resources={r'*': {'origins': '*'}}, supports_credentials=True)
 
 app.secret_key = 'segredoSecretoDoF4s71N0'
 login_manager = LoginManager(app)

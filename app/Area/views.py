@@ -40,9 +40,9 @@ def query2json(q):
         d["modalidade"]=el.modalidade
         d["geojson"] = {
             "type": "Feature",
-            "Geometry": {
+            "geometry": {
                 "type": "Point",
-                "coordinates": [str(el.latitude), str(el.longitude)]
+                "coordinates": [str(el.longitude), str(el.latitude)]
             }
         }
         data.append(d)
@@ -77,22 +77,22 @@ class AreaView(Resource):
             descricao=data['descricao'], 
             lotacao_max=data['lotacao_max'], 
             modalidade=data['modalidade'],
-            horario_seg_ini=data['horario']['seg_ini'],
+            horario_seg_ini=data['horario']['seg_inicio'],
             horario_seg_fim=data['horario']['seg_fim'],
-            horario_ter_ini=data['horario']['ter_ini'],
+            horario_ter_ini=data['horario']['ter_inicio'],
             horario_ter_fim=data['horario']['ter_fim'],
-            horario_qua_ini=data['horario']['qua_ini'],
+            horario_qua_ini=data['horario']['qua_inicio'],
             horario_qua_fim=data['horario']['qua_fim'],
-            horario_qui_ini=data['horario']['qui_ini'],
+            horario_qui_ini=data['horario']['qui_inicio'],
             horario_qui_fim=data['horario']['qui_fim'],
-            horario_sex_ini=data['horario']['sex_ini'],
+            horario_sex_ini=data['horario']['sex_inicio'],
             horario_sex_fim=data['horario']['sex_fim'],
-            horario_sab_ini=data['horario']['sab_ini'],
+            horario_sab_ini=data['horario']['sab_inicio'],
             horario_sab_fim=data['horario']['sab_fim'],
-            horario_dom_ini=data['horario']['dom_ini'],
+            horario_dom_ini=data['horario']['dom_inicio'],
             horario_dom_fim=data['horario']['dom_fim'],
-            latitude=data['geojson']['Geometry']['coordinates'][0],
-            longitude=data['geojson']['Geometry']['coordinates'][1],
+            latitude=data['lat'],
+            longitude=data['long'],
             user_id=curr_user.id
         )
 
