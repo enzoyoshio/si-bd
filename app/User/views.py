@@ -63,7 +63,12 @@ class SigninView(Resource):
             return json_response(message="O usuário não existe", status=405)
         if user.password == data['password']:
             login_user(user, remember=True)
-            return json_response(message="Login realizado com sucesso", status=200)
+            d_user = {
+                "id": user.id,
+                "email": user.email,
+                "nome": user.nome
+            }
+            return json_response(data=d_user, message="Login realizado com sucesso", status=200)
         return json_response(message="Senha incorreta", status=405)
 
 class SignupView(Resource):
