@@ -6,18 +6,26 @@ from flask_restful import reqparse
 
 from app.core.database import db_session
 from app.Area.models import AreaModel
+from app.User.models import UserModel
 # from app.Area.schemas import AreaSchema
 
 from flask_login import current_user, login_required
 
 from sqlalchemy import update, delete
 
-def query2json(q):
+def query2json(q, u):
+    dUser = {}
+    for el in u:
+        dUser[el.id] = el
     data = []
     for el in q:
         d = {}
         d["id"] = el.id 
-        d["user_id"] = el.user_id
+        d["user"] = {
+            "id": dUser[el.user_id].id,
+            "nome": dUser[el.user_id].nome,
+            "email": dUser[el.user_id].email
+        }
         d["nome"]=el.nome 
         d["descricao"]=el.descricao 
         d["lotacao_max"]=el.lotacao_max 
@@ -62,8 +70,9 @@ class AreaView(Resource):
         data = []
         data_json = []
         
-        data = AreaModel.query.filter(AreaModel.user_id == curr_user.id).all()
-        data_json = query2json(data)
+        dataUser = UserModel.query.all()
+        data = AreaModel.query.all()
+        data_json = query2json(data, dataUser)
         
         return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
 
@@ -147,6 +156,27 @@ class AreaViewId(Resource):
         db_session.commit()
         
         return json_response(message="area deletada com succeso", status=200)
+
+class UserAreaView(Resource):
+
+    def __init__(self):
+        pass
+
+    @login_required
+    def get(self):
+        curr_user = current_user
+
+        print(">>>>>>>>>>>>>>>>")
+        print(curr_user.id)
+        data = []
+        data_json = []
+        
+        dataUser = UserModel.query.all()
+        data = AreaModel.query.filter(AreaModel.user_id == curr_user.id).all()
+        data_json = query2json(data, dataUser)
+        
+        return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
+
 
 # { 
 #     "user_id": 1,

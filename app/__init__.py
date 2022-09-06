@@ -15,7 +15,7 @@ app.secret_key = 'segredoSecretoDoF4s71N0'
 login_manager = LoginManager(app)
 
 from app.HelloWorld.views import HelloWorldView
-from app.Area.views import AreaView, AreaViewId
+from app.Area.views import AreaView, AreaViewId, UserAreaView
 from app.User.views import SignupView, UserView, SigninView, SignoutView, UserViewId
 from app.Participacao.views import ParticipacaoView
 
@@ -25,6 +25,7 @@ api.add_resource(HelloWorldView, '/hello')
 
 api.add_resource(AreaView, '/areas')
 api.add_resource(AreaViewId, '/areas/<area_id>')
+api.add_resource(UserAreaView, '/minhas/areas')
 
 api.add_resource(SigninView, '/auth/signin')
 api.add_resource(SignupView, '/auth/signup')
