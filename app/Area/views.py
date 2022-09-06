@@ -7,13 +7,22 @@ from flask_restful import reqparse
 from app.core.database import db_session
 from app.Area.models import AreaModel
 from app.User.models import UserModel
+from app.Participacao.models import ParticipacaoModel
 # from app.Area.schemas import AreaSchema
 
 from flask_login import current_user, login_required
 
 from sqlalchemy import update, delete
 
-def query2json(q, u):
+def query2json(q, u, par):
+
+    dPar = {}
+    for p in par:
+        if p.area_id not in dPar:
+            dPar[p.area_id] = 1
+        else:
+            dPar[p.area_id] += 1
+
     dUser = {}
     for el in u:
         dUser[el.id] = el
@@ -53,6 +62,8 @@ def query2json(q, u):
                 "coordinates": [str(el.longitude), str(el.latitude)]
             }
         }
+        d["lotacao_atual"] = dPar[el.id] if el.id in dPar else 0
+
         data.append(d)
     return data
 
@@ -70,9 +81,10 @@ class AreaView(Resource):
         data = []
         data_json = []
         
+        dataParticipacao = ParticipacaoModel.query.all()
         dataUser = UserModel.query.all()
         data = AreaModel.query.all()
-        data_json = query2json(data, dataUser)
+        data_json = query2json(data, dataUser, dataParticipacao)
         
         return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
 
@@ -131,10 +143,11 @@ class AreaViewId(Resource):
         # data = AreaModel.query.all()
         # data_json = query2json(data)
         # else:
+        dataUser = UserModel.query.all()
         data = AreaModel.query.filter(AreaModel.id == area_id).first()
         if(data == None): 
             return json_response(message="id nao encontrado", status=404) 
-        data_json = query2json([data])
+        data_json = query2json([data], dataUser)
         return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
 
     def post(self, area_id):
@@ -171,12 +184,12 @@ class UserAreaView(Resource):
         data = []
         data_json = []
         
+        dataParticipacao = ParticipacaoModel.query.all()
         dataUser = UserModel.query.all()
         data = AreaModel.query.filter(AreaModel.user_id == curr_user.id).all()
-        data_json = query2json(data, dataUser)
+        data_json = query2json(data, dataUser, dataParticipacao)
         
         return json_response(data=data_json, message="Lista de todas as areas cadastradas!", status=200)
-
 
 # { 
 #     "user_id": 1,
